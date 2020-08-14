@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { connect } from "react-redux";
+import { addCart } from "./redux/reducer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      cartInput: "",
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          onChange={(e) => {
+            this.setState({ cartInput: e.target.value });
+          }}
+        />
+        <button
+          onClick={() => {
+            this.props.addCart(this.state.cartInput);
+            //# addCart(this.state.cartInput) is not connected to redux
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          Add to Cart
+        </button>
+      </div>
+    );
+  }
 }
 
-export default App;
+function mapStateToProps(reduxState) {
+  // return {
+  //   user: reduxState.userReducer.user,
+  // };
+  return reduxState.userReducer;
+}
+
+//#connect(function, object) - mapStateToProps, mapDispatchToProps(action builders)
+//#connect(data from redux to props, functions that send data to redux from React)
+export default connect(mapStateToProps, { addCart })(App);
